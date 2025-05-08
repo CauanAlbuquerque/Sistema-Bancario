@@ -4,6 +4,7 @@ def menu():
     Seja bem vindo(a) ao banco digital!
     Qual operação deseja executar?
 
+    [c] cadastrar usuario
     [d] depositar
     [s] sacar
     [e] Extrato
@@ -13,11 +14,11 @@ def menu():
 
 def depositar(saldo, valor, extrato):
     saldo += valor
-    extrato += f"deposito de R${valor}\n"
+    extrato += f"Deposito de R${valor}\n"
     return saldo, extrato
     
 
-def sacar(saldo, valor, extrato, limite, numero_saques, LIMITE_SAQUES):
+def sacar(*, saldo, valor, extrato, limite, numero_saques, LIMITE_SAQUES):
     if valor > saldo:
         return "Você não tem dinheiro suficiente na conta! "
 
@@ -33,10 +34,31 @@ def sacar(saldo, valor, extrato, limite, numero_saques, LIMITE_SAQUES):
             return saldo, extrato, numero_saques
 
     
-def exibir_extrato(saldo, extrato):
+def exibir_extrato(saldo, *, extrato):
     print(extrato if extrato else "Nenhuma movimentação realizada.")
     print(f"Saldo atual: R${saldo:.2f}")
             
+
+def criar_usuario(usuarios):
+    cpf = input("Insira seu CPF (somente com numeros) -> ")
+    usuario = filtrar_usuarios(cpf, usuarios)
+    
+    if usuario:
+        print("Já existe um usuário com esse cpf ")
+        return 
+    
+    nome = input("Insira seu nome completo -> ")
+    data_nascimento = input("Insira sua data de nascimento -> ")
+    endereco = input("Insira seu endereço com o formato: logradouro, nro - bairro - cidade/sigla estado -> ")
+    
+    usuarios.append({"nome": nome, "data de nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
+
+    print("Usuário cadastrado com sucesso! ")
+    
+def filtrar_usuarios(cpf, usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if "cpf" == cpf]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+    
 
 def main(): 
     saldo = 0
@@ -44,26 +66,39 @@ def main():
     extrato = ""
     numero_saques = 0
     LIMITE_SAQUES = 3
-
+    usuarios = []
+    
+    
 
     while True:
         opcao = input(menu())
     
-    
-        if opcao == "d":
+        if opcao == "c":
+            criar_usuario(usuarios)
+                        
+        elif opcao == "d":
             valor = float(input("Digite o valor que deseja depositar: "))
             saldo, extrato = depositar(saldo, valor, extrato)
         
         
         elif opcao == "s":
             valor = float(input("Digite o valor que deseja sacar: "))
-            saldo, extrato, numero_saques = sacar(saldo, valor, extrato, limite, numero_saques, LIMITE_SAQUES)
+            saldo, extrato, numero_saques = sacar(
+                saldo=saldo,
+                valor=valor,
+                extrato=extrato,
+                limite=limite, 
+                numero_saques=numero_saques,
+                LIMITE_SAQUES=LIMITE_SAQUES)
+            
+            print(saldo)
+            
             if numero_saques == LIMITE_SAQUES:
                 break
-            print("Saque efetuado! ")
+            
             
         elif opcao == "e":
-            exibir_extrato(saldo, extrato)
+            exibir_extrato(saldo, extrato=extrato)
         
             
         elif opcao == "q":
@@ -75,7 +110,4 @@ def main():
         
         
         
-        print(f"Seu saldo é de: {saldo}")
-        
-
 main()
