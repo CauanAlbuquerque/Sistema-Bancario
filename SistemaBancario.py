@@ -60,7 +60,7 @@ def criar_usuario(usuarios):
 def filtrar_usuarios(cpf, usuarios):
     for usuario in usuarios:
         if usuario["cpf"] == cpf:
-            return [0]
+            return usuario
         else: 
             return None
 
@@ -68,7 +68,7 @@ def verificar_conta(usuarios):
     cpf = input("Insira seu CPF (somente com números) -> ")
     usuario = filtrar_usuarios(cpf, usuarios)
     if usuario:
-        print(f"Nome: {usuario["Nome"]}")
+        print(f"Nome: {usuario["nome"]}")
         print(f"Data de nascimento: {usuario["data de nascimento"]}")
         print(f"Cpf: {usuario["cpf"]}")
         print(f"endereço: {usuario["endereco"]}")
@@ -78,7 +78,6 @@ def verificar_conta(usuarios):
 
 def main(): 
     LIMITE_SAQUES = 3
-    AGENCIA = "0001"
     saldo = 0
     limite = 500
     extrato = ""
