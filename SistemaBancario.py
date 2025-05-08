@@ -4,7 +4,8 @@ def menu():
     Seja bem vindo(a) ao banco digital!
     Qual operação deseja executar?
 
-    [c] cadastrar usuario
+    [nu] novo usuário
+    [vc] verificar conta
     [d] depositar
     [s] sacar
     [e] Extrato
@@ -55,26 +56,46 @@ def criar_usuario(usuarios):
 
     print("Usuário cadastrado com sucesso! ")
     
-def filtrar_usuarios(cpf, usuarios):
-    usuarios_filtrados = [usuario for usuario in usuarios if "cpf" == cpf]
-    return usuarios_filtrados[0] if usuarios_filtrados else None
     
+def filtrar_usuarios(cpf, usuarios):
+    for usuario in usuarios:
+        if usuario["cpf"] == cpf:
+            return [0]
+        else: 
+            return None
+
+def verificar_conta(usuarios):
+    cpf = input("Insira seu CPF (somente com números) -> ")
+    usuario = filtrar_usuarios(cpf, usuarios)
+    if usuario:
+        print(f"Nome: {usuario["Nome"]}")
+        print(f"Data de nascimento: {usuario["data de nascimento"]}")
+        print(f"Cpf: {usuario["cpf"]}")
+        print(f"endereço: {usuario["endereco"]}")
+    else: 
+        print("Nenhum usuário existente com esse cpf! ")
+
 
 def main(): 
+    LIMITE_SAQUES = 3
+    AGENCIA = "0001"
     saldo = 0
     limite = 500
     extrato = ""
     numero_saques = 0
-    LIMITE_SAQUES = 3
     usuarios = []
+    contas = []
     
     
 
     while True:
         opcao = input(menu())
     
-        if opcao == "c":
+        if opcao == "nu":
             criar_usuario(usuarios)
+            
+        elif opcao == "vc":
+            verificar_conta(usuarios)
                         
         elif opcao == "d":
             valor = float(input("Digite o valor que deseja depositar: "))
