@@ -6,6 +6,7 @@ def menu():
 
     [nu] novo usuário
     [vc] verificar conta
+    [nc] nova conta corrente
     [d] depositar
     [s] sacar
     [e] Extrato
@@ -18,7 +19,6 @@ def depositar(saldo, valor, extrato):
     extrato += f"Deposito de R${valor}\n"
     return saldo, extrato
     
-
 def sacar(*, saldo, valor, extrato, limite, numero_saques, LIMITE_SAQUES):
     if valor > saldo:
         return "Você não tem dinheiro suficiente na conta! "
@@ -34,12 +34,10 @@ def sacar(*, saldo, valor, extrato, limite, numero_saques, LIMITE_SAQUES):
             numero_saques += 1
             return saldo, extrato, numero_saques
 
-    
 def exibir_extrato(saldo, *, extrato):
     print(extrato if extrato else "Nenhuma movimentação realizada.")
     print(f"Saldo atual: R${saldo:.2f}")
             
-
 def criar_usuario(usuarios):
     cpf = input("Insira seu CPF (somente com numeros) -> ")
     usuario = filtrar_usuarios(cpf, usuarios)
@@ -55,8 +53,7 @@ def criar_usuario(usuarios):
     usuarios.append({"nome": nome, "data de nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
 
     print("Usuário cadastrado com sucesso! ")
-    
-    
+        
 def filtrar_usuarios(cpf, usuarios):
     for usuario in usuarios:
         if usuario["cpf"] == cpf:
@@ -75,9 +72,21 @@ def verificar_conta(usuarios):
     else: 
         print("Nenhum usuário existente com esse cpf! ")
 
+def criar_conta_corrente(agencia, numero_conta, usuarios):
+    cpf = input("Insira seu CPF: ")
+    usuario = filtrar_usuarios(cpf, usuarios)
+    
+    if usuario:
+        print("Conta criada com sucesso! ")
+        return {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
+    
+    print("Usuário não encontrado! ")
+    
 
 def main(): 
     LIMITE_SAQUES = 3
+    AGENCIA = "0001"
+    
     saldo = 0
     limite = 500
     extrato = ""
@@ -95,6 +104,13 @@ def main():
             
         elif opcao == "vc":
             verificar_conta(usuarios)
+            
+        elif opcao == "nc":
+            numero_conta = len(contas) + 1
+            conta = criar_conta_corrente(AGENCIA, numero_conta, usuarios)
+            
+            if conta:
+                contas.append(conta)
                         
         elif opcao == "d":
             valor = float(input("Digite o valor que deseja depositar: "))
